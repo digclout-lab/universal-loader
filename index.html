@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1"> <!-- Додаємо адаптивність -->
+    <title>WebLoader</title>
+    <link rel="icon" type="image/png" href="cslogo.png">
+    <style>
+        html, body {
+            height: 100%;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            min-height: 100vh;
+            background: url('cs2.jpg') no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            width: 100%;
+            max-width: 400px;
+            background: rgba(255,255,255,0.3);
+            padding: 32px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            margin: 0;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 24px;
+            font-size: 2rem;
+        }
+        button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background: #0078d4;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #005fa3;
+        }
+        .message {
+            margin-top: 16px;
+            text-align: center;
+            color: #0078d4;
+            font-size: 1rem;
+            word-break: break-word;
+        }
+        .dynamic-blur {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            backdrop-filter: blur(var(--blur-amount, 0px));
+            -webkit-backdrop-filter: blur(var(--blur-amount, 0px));
+            transition: backdrop-filter 0.5s, -webkit-backdrop-filter 0.5s;
+        }
+        body > .container {
+            position: relative;
+            z-index: 1;
+        }
+        @media (max-width: 500px) {
+            .container {
+                max-width: 95vw;
+                padding: 16px;
+                border-radius: 0;
+                box-shadow: none;
+            }
+            h1 {
+                font-size: 1.3rem;
+            }
+            button {
+                font-size: 0.95rem;
+                padding: 8px;
+            }
+            .message {
+                font-size: 0.95rem;
+            }
+        }
+    </style>
+    <script>
+        // Заборона завантаження елементів з сайту (наприклад, правий клік та перетягування)
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        });
+        document.addEventListener('dragstart', function(e) {
+            e.preventDefault();
+        });
+
+        // Додаємо динамічний час до назви сайту
+        function updateTitleWithTime() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('uk-UA', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            document.title = `WebLoader | ${timeString}`;
+        }
+        setInterval(updateTitleWithTime, 1000);
+        updateTitleWithTime();
+
+        // Динамічний блюр фону
+        window.addEventListener('DOMContentLoaded', () => {
+            const blurDiv = document.querySelector('.dynamic-blur');
+            let blurAmount = 0;
+            let direction = 1;
+
+            function animateBlur() {
+                blurAmount += direction * 0.2;
+                if (blurAmount >= 16) direction = -1;
+                if (blurAmount <= 0) direction = 1;
+                blurDiv.style.setProperty('--blur-amount', `${blurAmount}px`);
+                requestAnimationFrame(animateBlur);
+            }
+            animateBlur();
+        });
+    </script>
+</head>
+<body>
+    <div class="dynamic-blur"></div>
+    <div class="container">
+        <h1>WebLoader v0.1.0</h1>
+        <form id="downloadForm">
+            <button type="button" id="downloadBtn">Завантажити файл</button>
+        </form>
+        <div class="message" id="message"></div>
+    </div>
+    <script>
+        // Додаємо логіку для кнопки "Завантажити файл"
+        document.getElementById('downloadBtn').addEventListener('click', function() {
+            // Вкажіть шлях до файлу, який потрібно завантажити
+            const fileUrl = 'loader.exe'; // Змініть на ваш файл
+            const link = document.createElement('a');
+            link.href = fileUrl;
+            link.download = fileUrl.split('/').pop();
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            document.getElementById('message').textContent = 'Завантаження розпочато.';
+        });
+    </script>
+</body>
+</html>
